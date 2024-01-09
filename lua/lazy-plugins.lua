@@ -3,13 +3,14 @@ require('lazy').setup({
     'tpope/vim-sleuth',
     'nvim-lua/plenary.nvim',
     'folke/zen-mode.nvim',
+
     {
         'tpope/vim-fugitive',
         keys = {
-            { '<leader>gc', '<cmd>Git commit<cr>', desc = '[g]it [c]ommit' },
+            { '<leader>Gc', '<cmd>Git commit<cr>', desc = '[G]it [c]ommit' },
         }
     },
-    
+
     {
         'folke/trouble.nvim',
         config = function()
@@ -21,11 +22,11 @@ require('lazy').setup({
 	        require('trouble').toggle() 
 	    end)
 
-            vim.keymap.set('n', '<leader>tn', function()
+            vim.keymap.set('n', ']d', function()
 	        require('trouble').next({skip_groups = true, jump = true});
 	    end)
 
-            vim.keymap.set('n', '<leader>tt', function()
+            vim.keymap.set('n', '[d', function()
 	        require('trouble').previous({skip_groups = true, jump = true}); 
 	    end)
 
@@ -100,11 +101,11 @@ require('lazy').setup({
         dependencies = {
             { 'williamboman/mason.nvim', config = true },
             'williamboman/mason-lspconfig.nvim',
-            
+
             --Useful status updates for LSP
             --NOTE: 'opts = {}' is the same as calling 'require('fidget').setup({})'
             { 'j-hui/fidget.nvim', opts = {} },
-          
+
           'folke/neodev.nvim',
 	},
 
@@ -113,6 +114,7 @@ require('lazy').setup({
             require('mason-lspconfig').setup({
                 ensure_installed = {
                     'lua_ls',
+                    'pyright',
                 },
 
                 handlers = {
@@ -123,6 +125,60 @@ require('lazy').setup({
             })
         end
     },
+
+    {
+        -- Autocompletion
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            -- Snippet engine & its associated nvim-cmp source
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
+
+            -- Adds LSP completion capabilities
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-path',
+
+            'hrsh7th/cmp-buffer',
+        },
+
+        config = function()
+            
+            local cmp = require'cmp'
+
+            cmp.setup({
+                snippet = {
+                    -- REQUIRED - you must specify a snippet engine
+                    expand = function(args)
+                        --vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+                         require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+                        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+                        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+                    end,
+                },
+                window = {
+                    -- completion = cmp.config.window.bordered(),
+                    -- documentation = cmp.config.window.bordered(),
+                },
+                mapping = cmp.mapping.preset.insert({
+                    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+                    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                    ['<C-Space>'] = cmp.mapping.complete(),
+                    ['<C-e>'] = cmp.mapping.abort(),
+                    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+                }),
+                sources = cmp.config.sources({
+                    { name = 'nvim_lsp' },
+                    --{ name = 'vsnip' }, -- For vsnip users.
+                    { name = 'luasnip' }, -- For luasnip users.
+                    -- { name = 'ultisnips' }, -- For ultisnips users.
+                    -- { name = 'snippy' }, -- For snippy users.
+                }, {
+                    { name = 'buffer' },
+                })
+            })
+        end
+    },
+
 
     {
         -- Add indentation guides even on blank lines
@@ -161,6 +217,13 @@ require('lazy').setup({
     	    'nvim-treesitter/nvim-treesitter-textobjects'
         },
         build = ':TSUpdate',
+    },
+
+    {
+        'mbbill/undotree',
+        keys = {
+            { '<leader>u', vim.cmd.UndotreeToggle, desc = '[u]ndotree toggle' },
+        }
     },
     
     {
