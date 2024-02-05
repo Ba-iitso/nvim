@@ -98,31 +98,18 @@ require('lazy').setup({
 
     {
         'neovim/nvim-lspconfig',
-        dependencies = {
-            { 'williamboman/mason.nvim', config = true },
-            'williamboman/mason-lspconfig.nvim',
-
-            --Useful status updates for LSP
-            --NOTE: 'opts = {}' is the same as calling 'require('fidget').setup({})'
-            { 'j-hui/fidget.nvim', opts = {} },
-
-          'folke/neodev.nvim',
-	},
-
+        
         config = function()
-            require('mason').setup()
-            require('mason-lspconfig').setup({
-                ensure_installed = {
-                    'lua_ls',
-                    'pyright',
-                },
-
-                handlers = {
-                    function (server_name) -- default handler (optional)
-                        require('lspconfig')[server_name].setup{}
-                    end,
+            local lspconfig = require('lspconfig')
+            
+            lspconfig.pyright.setup{}
+            lspconfig.rust_analyzer.setup{}
+            lspconfig.gdscript.setup{
+                on_attatch = on_attatch,
+                flags = {
+                    debounce_text_changes = 150,
                 }
-            })
+            }
         end
     },
 

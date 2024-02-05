@@ -27,14 +27,17 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	-- Buffer local mappings
 	-- See ':help vim.lsp.*'
 	local opts = { buffer = ev.buf }
-	vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-	vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-	vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-	vim.keymap.set("n", "<leader>vd", function() vim.lsp.diagnostic.open_float() end, opts)
-	vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-	vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-	vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-	vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+	vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition(), opts)
+	vim.keymap.set("n", "gd", vim.lsp.buf.definition(), opts)
+	vim.keymap.set("n", "gD", vim.lsp.buf.declaration(), opts)
+	vim.keymap.set("n", "gi", vim.lsp.buf.implementation(), opts)
+	vim.keymap.set("n", "gr", vim.lsp.buf.references(), opts)
+	vim.keymap.set("n", "K", vim.lsp.buf.hover(), opts)
+	vim.keymap.set("n", "<leader>vd", vim.lsp.diagnostic.open_float())
+	vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol(), opts)
+	vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action(), opts)
+	vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename(), opts)
+	vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help(), opts)
     end,
 })
 
@@ -51,3 +54,18 @@ vim.diagnostic.config({
 	prefix = '',
     },
 })
+
+-- Execute current file if executable for linux
+vim.keymap.set("n", "<leader>f.", function()
+  local line = vim.api.nvim_buf_get_lines(0, 0, -1, false)[0]
+  if not string.find(line, "^#!") then
+    return
+  else
+    local file = vim.fn.expand("%") -- Get the current file name
+    local escaped_file = vim.fn.shellescape(file)
+    vim.cmd("!chmod +x " .. escaped_file)
+    vim.cmd("vsplit") -- Split the window vertically
+    vim.cmd("terminal " .. escaped_file) 
+    vim.api.nvim_feedkeys("i", "n", false)
+  end
+end, { desc = "Execute current file in terminal" })
