@@ -98,18 +98,30 @@ require('lazy').setup({
 
     {
         'neovim/nvim-lspconfig',
-        
+        dependencies = {
+            { 'williamboman/mason.nvim', config = true},
+            'williamboman/mason-lspconfig.nvim'
+
+            --useful status updates for LSP
+            --NOTE: 'opts = {}' is the same as calling 'require('fidget').setup'
+            { 'j-hui/fidget.nvim', opts ={} },
+
+            'folke/neodev.nvim',
+        },
+
         config = function()
-            local lspconfig = require('lspconfig')
-            
-            lspconfig.pyright.setup{}
-            lspconfig.rust_analyzer.setup{}
-            lspconfig.gdscript.setup{
-                on_attatch = on_attatch,
-                flags = {
-                    debounce_text_changes = 150,
-                }
-            }
+            require('mason').setup()
+            require('mason-lspconfig').setup({
+                ensure_installed = {
+                    'lua_ls',
+                    'pyright',
+                },
+
+                handlers = {
+                    function (server_name) -- default handler (optional)
+                        require('lspconfig')[server_name].setup{}
+                    end,
+            })
         end
     },
 
@@ -151,7 +163,7 @@ require('lazy').setup({
                     ['<C-f>'] = cmp.mapping.scroll_docs(4),
                     ['<C-Space>'] = cmp.mapping.complete(),
                     ['<C-e>'] = cmp.mapping.abort(),
-                    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+                    ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
                 }),
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
@@ -252,7 +264,7 @@ require('lazy').setup({
     },
     
     {--Collection of various small independant plugins/modules
-        'echasnovsky/mini.nvim',
+        'echasnovski/mini.nvim',
         config = function()
             --Better Around/Inside textobjects
             --
@@ -280,6 +292,16 @@ require('lazy').setup({
             statusline.section_location = function()
                 return ''
             end
+
+            -- For commenting out blocks of text
+            -- 
+            -- - gc  - toggle comment(follow with text obj, eg: gcip to toggle "[I]n [P]aragraph")
+            -- - gcc - toggle comment on current line
+            -- can add functions to modify behavior before or after commenting
+            require('mini.comment').setup()
+
+            -- Automatically creates the left paren/quote/brace when typing the right one. 
+            require('mini.pairs').setup()
 
             -- ... and there is more!
             -- Check out: https://github.com/echasnovsky/mini.nvim
