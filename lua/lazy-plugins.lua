@@ -100,7 +100,7 @@ require('lazy').setup({
         'neovim/nvim-lspconfig',
         dependencies = {
             { 'williamboman/mason.nvim', config = true},
-            'williamboman/mason-lspconfig.nvim'
+            'williamboman/mason-lspconfig.nvim',
 
             --useful status updates for LSP
             --NOTE: 'opts = {}' is the same as calling 'require('fidget').setup'
@@ -121,6 +121,7 @@ require('lazy').setup({
                     function (server_name) -- default handler (optional)
                         require('lspconfig')[server_name].setup{}
                     end,
+	    	}
             })
         end
     },
