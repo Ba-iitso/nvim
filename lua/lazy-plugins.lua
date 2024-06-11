@@ -221,7 +221,6 @@ require('lazy').setup({
             --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
             local capabilities = vim.lsp.protocol.make_client_capabilities()
             capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-            require('lspconfig').gdscript.setup(capabilities)
             -- Enable the following language servers
             --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
             --
@@ -235,6 +234,8 @@ require('lazy').setup({
                 -- clangd = {},
                 -- gopls = {},
                 pyright = {},
+                ols = {},
+                zls = {},
                 -- rust_analyzer = {},
                 -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
                 --
@@ -481,8 +482,6 @@ require('lazy').setup({
         end,
     },
 
-    { 'habamax/vim-godot' , event = 'VimEnter' },
-
     {
         'mbbill/undotree',
         keys = {
@@ -565,12 +564,14 @@ require('lazy').setup({
             -- can add functions to modify behavior before or after commenting
             require('mini.comment').setup()
 
-            -- Automatically creates the left paren/quote/brace when typing the right one. 
-            require('mini.pairs').setup()
-
             -- ... and there is more!
             -- Check out: https://github.com/echasnovsky/mini.nvim
         end,
+    },
+
+    {
+        'stevearc/oil.nvim',
+        opts = {},
     },
 
 }, {})
