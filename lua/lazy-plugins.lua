@@ -35,67 +35,15 @@ require('lazy').setup({
 
     {
         -- Color scheme
-        'catppuccin/nvim',
-        name = 'catppuccin',
+        'yorik1984/newpaper.nvim',
         priority = 1000,
+        config = true,
         opts = {
-            flavour = 'mocha', -- latte, frappe, macchiato, mocha
-            styles = { -- Handles the styles of general hi groups (see ':h highlight-args'):
-                comments = { "italic"}, -- Change the style of comments
-                conditionals = {},
-                loops = {},
-                functions = {},
-                keywords = {},
-                strings = {},
-                variables = {},
-                numbers = {},
-                booleans = {},
-                properties = {},
-                types = {},
-                operators = {},
-            },
-            integrations = {
-                harpoon = true,
-                mason = true,
-                treesitter = true,
-                gitsighns = true,
-                indent_blankline = {
-                    enabled = true,
-                    scope_color = "lavender", -- catppuccin color (eg. 'lavender') Default: text
-                    colored_indent_levels = false,
-                },
-                native_lsp = {
-                    enabled = true,
-                    virtual_text = {
-                        errors = { "italic" },
-                        hints = { "italic" },
-                        warnings = { "italic" },
-                        information = { "italic" },
-                    },
-                    underlines = {
-                        errors = { "underline" },
-                        hints = { "underline" },
-                        warnings = { "underline" },
-                        information = { "underline" },
-                    },
-                    inlay_hints = {
-                        background = true,
-                    },
-                },
-                telescope = {
-                    enabled = true,
-                    -- style = "nvchad"
-                },
-                which_key = true,
-
-            },
+            style = "dark",
         },
-        config = function()
-            vim.cmd('colorscheme catppuccin')
-        end
     },
 
-    
+
     { -- LSP Configuration & Plugins
         'neovim/nvim-lspconfig',
         dependencies = {
@@ -231,7 +179,7 @@ require('lazy').setup({
             --  - settings (table): Override the default settings passed when initializing the server.
             --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
             local servers = {
-                -- clangd = {},
+                 clangd = {},
                 -- gopls = {},
                 pyright = {},
                 ols = {},
@@ -571,7 +519,9 @@ require('lazy').setup({
 
     {
         'stevearc/oil.nvim',
-        opts = {},
+        opts = {
+            delete_to_trash = true,
+        },
     },
 
 }, {})
