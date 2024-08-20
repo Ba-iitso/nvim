@@ -52,3 +52,10 @@ vim.keymap.set("n", "<leader>f.", function()
     vim.api.nvim_feedkeys("i", "n", false)
   end
 end, { desc = "Execute current file in terminal" })
+
+-- Open parent directory in oil nvim
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+-- Yank to system clipboard
+vim.keymap.set({"n", "v"}, "<leader>y", [["+y]], { desc = "[Y]ank to system clipboard" })
+vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "[Y]ank to system clipboard" })

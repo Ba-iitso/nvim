@@ -17,5 +17,7 @@ vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
-
+-- Tabs to spaces
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
 
